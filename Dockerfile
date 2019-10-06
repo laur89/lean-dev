@@ -2,6 +2,7 @@ FROM  quantconnect/lean:foundation
 MAINTAINER Laur
 
 
+# enable ssh: (from https://github.com/phusion/baseimage-docker#enabling_ssh) {{{
 # set up ssh access to phusion (lean's base image):
 RUN rm -f /etc/service/sshd/down
 
@@ -9,7 +10,23 @@ RUN rm -f /etc/service/sshd/down
 # have to do that yourself. You may also comment out this instruction; the
 # init system will auto-generate one during boot.
 RUN /etc/my_init.d/00_regen_ssh_host_keys.sh
+# }}}
 
+
+# Set working directory 
+WORKDIR /src
+
+RUN update-locale LANG=C.UTF-8
+
+# Copy over bash script used to install CLI tools. Build cache will only be 
+# invalidated if this bash script was changed. 
+ADD dependencies.sh /
+
+# Install CLI tools & dependecies 
+RUN /bin/sh /dependencies.sh
+
+# clean up for smaller image:
+RUN apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
 
 ########################
@@ -39,8 +56,6 @@ RUN /etc/my_init.d/00_regen_ssh_host_keys.sh
 ## link to / for simpler reference point for cron:
 #RUN ln -s /usr/local/sbin/backup.sh /backup.sh
 
-## clean up for smaller image:
-#RUN apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
 ## baseimage init process:
 #ENTRYPOINT ["/sbin/my_init"]
