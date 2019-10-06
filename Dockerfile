@@ -12,6 +12,9 @@ RUN rm -f /etc/service/sshd/down
 RUN /etc/my_init.d/00_regen_ssh_host_keys.sh
 # }}}
 
+# enable insecure key permanently for easy ssh access:
+RUN /usr/sbin/enable_insecure_key
+
 
 # Set working directory 
 WORKDIR /src
