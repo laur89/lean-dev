@@ -17,7 +17,10 @@ RUN /usr/sbin/enable_insecure_key
 
 # make in-container user same as host's (UID & GUID wise):
 # from https://medium.com/@ls12styler/docker-as-an-integrated-development-environment-95bc9b01d2c1
-ENV USERNAME laur
+# pass USERNAME from docker-compose build.args.USERNAME:
+ARG USERNAME
+ENV USERNAME $USERNAME
+
 RUN useradd -ms /bin/bash ${USERNAME}
 WORKDIR /home/$USERNAME
 ENV HOME /home/$USERNAME
