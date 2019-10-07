@@ -1,0 +1,43 @@
+# optional shell settings/config to source
+################################################
+source /etc/build_env_vars  # source the env vars available at build-time
+
+unalias deps build b run brun src >/dev/null 2>&1
+deps() {
+    local e
+    src || return 1
+    nuget restore QuantConnect.Lean.sln
+    e=$?
+    popd > /dev/null
+    return $e
+}
+
+
+build() {
+    local e
+    src || return 1
+    msbuild QuantConnect.Lean.sln
+    e=$?
+    popd > /dev/null
+    return $e
+}
+
+alias b='build'
+
+
+run() {
+    local e
+    pushd "$SRC_MOUNT/Launcher/bin/Debug" > /dev/null || return 1
+    mono ./QuantConnect.Lean.Launcher.exe
+    e=$?
+    popd > /dev/null
+    return $e
+}
+
+brun() {
+    build && run
+}
+
+src() {
+    pushd -- "$SRC_MOUNT" > /dev/null
+}

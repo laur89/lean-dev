@@ -18,6 +18,8 @@ RUN /usr/sbin/enable_insecure_key
 # make in-container user same as host's (UID & GUID wise):
 # from https://medium.com/@ls12styler/docker-as-an-integrated-development-environment-95bc9b01d2c1
 # pass USERNAME from docker-compose build.args.USERNAME:
+ARG SRC_MOUNT
+ENV SRC_MOUNT $SRC_MOUNT
 ARG USERNAME
 ENV USERNAME $USERNAME
 
@@ -25,16 +27,14 @@ RUN useradd -ms /bin/bash ${USERNAME}
 WORKDIR /home/$USERNAME
 ENV HOME /home/$USERNAME
 
-
-# Set working directory 
-WORKDIR /src
-
 ENV DEBIAN_FRONTEND=noninteractive
 RUN update-locale LANG=C.UTF-8
 
 # Copy over bash script used to install CLI tools. Build cache will only be 
 # invalidated if this bash script was changed. 
 ADD dependencies.sh /
+
+ADD bash_funs_overrides /home/$USERNAME/.bash_funs_overrides
 
 # Install CLI tools & dependecies 
 RUN /bin/sh /dependencies.sh
@@ -54,6 +54,7 @@ ADD entrypoint.sh /etc/my_init.d/entrypoint.sh
 # clean up for smaller image:
 RUN apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
+RUN env > /etc/build_env_vars
 
 ########################
 #ENV DEBIAN_FRONTEND=noninteractive
