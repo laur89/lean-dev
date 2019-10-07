@@ -19,8 +19,8 @@ RUN /usr/sbin/enable_insecure_key
 # from https://medium.com/@ls12styler/docker-as-an-integrated-development-environment-95bc9b01d2c1
 ENV USERNAME laur
 RUN useradd -ms /bin/bash ${USERNAME}
-WORKDIR /home/laur
-ENV HOME /home/laur
+WORKDIR /home/$USERNAME
+ENV HOME /home/$USERNAME
 
 
 # Set working directory 
@@ -37,15 +37,15 @@ ADD dependencies.sh /
 RUN /bin/sh /dependencies.sh
 
 # setup ssh for our non-root $USERNAME: {{{
-RUN mkdir /home/laur/.ssh && cp /root/.ssh/* /home/laur/.ssh/ && chown -R laur:laur /home/laur/.ssh && \
-    chmod -R 'u=rwX,g=,o=' -- /home/laur/.ssh
+RUN mkdir /home/$USERNAME/.ssh && cp /root/.ssh/* /home/$USERNAME/.ssh/ && chown -R $USERNAME:$USERNAME /home/$USERNAME/.ssh && \
+    chmod -R 'u=rwX,g=,o=' -- /home/$USERNAME/.ssh
 # OR:
-#RUN mkdir /home/laur/.ssh && cat /etc/insecure_key.pub >> /home/laur/.ssh/authorized_keys && chown -R laur:laur /home/laur/.ssh && \
-    #chmod 700 -- /home/laur/.ssh && chmod 600 /home/laur/.ssh/authorized_keys
+#RUN mkdir /home/$USERNAME/.ssh && cat /etc/insecure_key.pub >> /home/$USERNAME/.ssh/authorized_keys && chown -R $USERNAME:$USERNAME /home/$USERNAME/.ssh && \
+    #chmod 700 -- /home/$USERNAME/.ssh && chmod 600 /home/$USERNAME/.ssh/authorized_keys
 RUN grep -Eq '^UsePAM\s+yes' /etc/ssh/sshd_config || echo 'UsePAM yes' >> /etc/ssh/sshd_config
 # }}}
 
-# Entrypoint script does switches u/g ID's and `chown`s everything
+# Entrypoint script switches u/g ID's and `chown`s everything:
 ADD entrypoint.sh /etc/my_init.d/entrypoint.sh
 
 # clean up for smaller image:
