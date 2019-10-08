@@ -19,9 +19,9 @@ RUN /usr/sbin/enable_insecure_key
 # from https://medium.com/@ls12styler/docker-as-an-integrated-development-environment-95bc9b01d2c1
 # pass USERNAME from docker-compose build.args.USERNAME:
 ARG SRC_MOUNT
-ENV SRC_MOUNT $SRC_MOUNT
+ENV SRC_MOUNT=$SRC_MOUNT
 ARG USERNAME
-ENV USERNAME $USERNAME
+ENV USERNAME=${USERNAME:-me}
 
 RUN useradd -ms /bin/bash ${USERNAME}
 WORKDIR /home/$USERNAME
