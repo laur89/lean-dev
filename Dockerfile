@@ -18,12 +18,12 @@ RUN /usr/sbin/enable_insecure_key
 # make in-container user same as host's (UID & GUID wise):
 # from https://medium.com/@ls12styler/docker-as-an-integrated-development-environment-95bc9b01d2c1
 # pass USERNAME from docker-compose build.args.USERNAME:
-ARG SRC_MOUNT
-ENV SRC_MOUNT=$SRC_MOUNT
 ARG USERNAME
 ENV USERNAME=${USERNAME:-me}
 
 RUN useradd -ms /bin/bash ${USERNAME}
+# set group so we can read /etc/container_environment* stuff by phusion:
+RUN usermod -a -G docker_env  $USERNAME
 WORKDIR /home/$USERNAME
 ENV HOME /home/$USERNAME
 
@@ -54,37 +54,4 @@ ADD entrypoint.sh /etc/my_init.d/entrypoint.sh
 # clean up for smaller image:
 RUN apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
-RUN env > /etc/build_env_vars
-
 ########################
-#ENV DEBIAN_FRONTEND=noninteractive
-
-#RUN apt-get update
-#RUN apt-get install -y --no-install-recommends \
-        #mysql-client \
-        #wget
-#RUN update-locale LANG=C.UTF-8
-
-#RUN wget -q https://github.com/borgbackup/borg/releases/download/1.0.10/borg-linux64
-#RUN mv borg-linux64 /usr/local/sbin/borg
-#RUN chown root:root /usr/local/sbin/borg
-#RUN chmod 755 /usr/local/sbin/borg
-
-#RUN wget -qO- https://get.docker.com/ | sh
-
-#ADD scripts_common.sh /scripts_common.sh
-#ADD setup.sh /etc/my_init.d/setup.sh
-
-## add to $PATH:
-#ADD backup.sh /usr/local/sbin/backup.sh
-#ADD restore.sh /usr/local/sbin/restore.sh
-#ADD list.sh /usr/local/sbin/list.sh
-
-## link to / for simpler reference point for cron:
-#RUN ln -s /usr/local/sbin/backup.sh /backup.sh
-
-
-## baseimage init process:
-#ENTRYPOINT ["/sbin/my_init"]
-
-

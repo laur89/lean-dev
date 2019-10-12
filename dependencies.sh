@@ -3,6 +3,6 @@
 
 apt-get update && \
 apt-get install -y --no-install-recommends \
-        tmux
+        tmux jq
 
 # TODO: pkg 'neovim' not avail atm

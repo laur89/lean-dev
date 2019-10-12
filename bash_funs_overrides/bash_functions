@@ -1,6 +1,10 @@
 # optional shell settings/config to source
 ################################################
-source /etc/build_env_vars  # source the env vars available at build-time
+
+# source the env vars prepped by phusion; it's automatically
+# sourced by login shell, but login shell via ssh doesn't seem to be
+# quite working for us, so let's manually source it:
+source /etc/container_environment.sh
 
 unalias deps build b run brun src >/dev/null 2>&1
 deps() {
