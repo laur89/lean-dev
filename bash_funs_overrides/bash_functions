@@ -7,11 +7,12 @@
 source /etc/container_environment.sh
 
 unalias deps build b run brun src >/dev/null 2>&1
+
 deps() {
     local e
     src || return 1
     nuget restore QuantConnect.Lean.sln
-    e=$?
+    readonly e=$?
     popd > /dev/null
     return $e
 }
@@ -20,8 +21,8 @@ deps() {
 build() {
     local e
     src || return 1
-    msbuild QuantConnect.Lean.sln
-    e=$?
+    msbuild QuantConnect.Lean.sln  # /property:Configuration=Release
+    readonly e=$?
     popd > /dev/null
     return $e
 }
@@ -33,7 +34,7 @@ run() {
     local e
     pushd "$SRC_MOUNT/Launcher/bin/Debug" > /dev/null || return 1
     mono ./QuantConnect.Lean.Launcher.exe
-    e=$?
+    readonly e=$?
     popd > /dev/null
     return $e
 }

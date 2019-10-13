@@ -3,8 +3,7 @@
 # mostly stolen from https://medium.com/@ls12styler/docker-as-an-integrated-development-environment-95bc9b01d2c1
 ###########################################################
 
-#USERNAME=laur  # should be defined in Dockerfile
-
+[[ -z "$USERNAME" ]] && { echo '$USERNAME var not defined, fail'; exit 1; }
 USER_ID=${HOST_USER_ID:-1000}
 GROUP_ID=${HOST_GROUP_ID:-1000}
 
