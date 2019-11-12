@@ -33,7 +33,7 @@ alias b='build'
 run() {
     local e
     pushd "$SRC_MOUNT/Launcher/bin/Debug" > /dev/null || return 1
-    mono ./QuantConnect.Lean.Launcher.exe
+    mono ./QuantConnect.Lean.Launcher.exe < /dev/null  # do not let lean steal our stdin (Press any key...)
     readonly e=$?
     popd > /dev/null
     return $e
