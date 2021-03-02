@@ -56,7 +56,7 @@ RUN grep -Eq '^UsePAM\s+yes' /etc/ssh/sshd_config || echo 'UsePAM yes' >> /etc/s
 # Install some py libraries for better IDE integration:
 #- note the reason we're installing pythonnet v2.4.0 is that newer one requires
 	#language level that is not supported by the old `mono` included in QC docker image
-	#(mono v`15.12` at the time of writing); once mono is updated (or if and when [.net Core](https://github.com/QuantConnect/Lean/issues/452)
+	#(mono v`5.12.0` at the time of writing); once mono is updated (or if and when [.net Core](https://github.com/QuantConnect/Lean/issues/452)
 	#support is added and can replace mono) please bump the pythonnet version.
 RUN pip install --no-cache-dir  quantconnect-stubs  pythonnet==2.4.0
 
