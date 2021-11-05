@@ -1,0 +1,43 @@
+kind: pipeline
+type: docker
+name: default
+
+steps:
+#- name: build
+  #image: docker
+  #commands:
+  #- docker build -t lean-dev:latest
+
+- name: publish-image
+  image: plugins/docker
+  settings:
+    #username: kevinbacon
+    #password: pa55word
+    username:
+      from_secret: public_docker_username
+    password:
+      from_secret: public_docker_password
+    auto_tag: true
+    #auto_tag_suffix: linux-amd64
+    repo: layr/lean-dev
+    # define repo&registry for private registry:
+    #repo: index.company.com/foo/bar
+    #registry: index.company.com
+    #tags:
+    #- 1.0.0
+    #- 1.0
+
+- name: trigger-downstream
+  image: plugins/downstream
+  settings:
+    server:
+      from_secret: drone_server
+    token:
+      from_secret: drone_token
+    fork: true
+    repositories:
+      - laur89/lean-dev-rider@master
+
+trigger:
+  branch:
+  - master
