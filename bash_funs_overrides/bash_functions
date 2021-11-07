@@ -8,11 +8,12 @@ source /etc/container_environment.sh
 
 unalias deps build b run brun src >/dev/null 2>&1
 
+# TODO: deprecated?
 deps() {
     local e
     src || return 1
     nuget restore QuantConnect.Lean.sln
-    readonly e=$?
+    e=$?
     popd > /dev/null
     return $e
 }
@@ -21,8 +22,8 @@ deps() {
 build() {
     local e
     src || return 1
-    msbuild QuantConnect.Lean.sln  # /property:Configuration=Release
-    readonly e=$?
+    dotnet build QuantConnect.Lean.sln  # /property:Configuration=Release
+    e=$?
     popd > /dev/null
     return $e
 }
@@ -33,8 +34,8 @@ alias b='build'
 run() {
     local e
     pushd "$SRC_MOUNT/Launcher/bin/Debug" > /dev/null || return 1
-    mono ./QuantConnect.Lean.Launcher.exe < /dev/null  # do not let lean steal our stdin (Press any key...)
-    readonly e=$?
+    dotnet QuantConnect.Lean.Launcher.dll < /dev/null  # do not let lean steal our stdin (Press any key...)
+    e=$?
     popd > /dev/null
     return $e
 }
