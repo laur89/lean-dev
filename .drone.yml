@@ -11,18 +11,16 @@ steps:
 - name: publish-image
   image: plugins/docker
   settings:
-    #username: kevinbacon
-    #password: pa55word
-    username:
-      from_secret: public_docker_username
-    password:
-      from_secret: public_docker_password
+    #username:
+      #from_secret: public_docker_username
+    #password:
+      #from_secret: public_docker_password
     auto_tag: true
     #auto_tag_suffix: linux-amd64
-    repo: layr/lean-dev
+    #repo: layr/lean-dev
     # define repo&registry for private registry:
-    #repo: index.company.com/foo/bar
-    #registry: index.company.com
+    registry: docker.aliste.eu
+    repo: docker.aliste.eu/lean/lean-dev
     #tags:
     #- 1.0.0
     #- 1.0
