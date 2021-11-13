@@ -13,6 +13,8 @@ RUN useradd -ms /bin/bash ${USERNAME}
 RUN usermod -a -G docker_env  $USERNAME
 WORKDIR /home/$USERNAME
 ENV HOME /home/$USERNAME
+# opt-out of .NET telemetry:
+ENV DOTNET_CLI_TELEMETRY_OPTOUT 1
 
 ENV DEBIAN_FRONTEND=noninteractive
 RUN update-locale LANG=C.UTF-8
