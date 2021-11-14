@@ -31,13 +31,25 @@ build() {
 alias b='build'
 
 
-run() {
-    local e
-    pushd "$SRC_MOUNT/Launcher/bin/Debug" > /dev/null || return 1
+_run() {
+    local rls e
+
+    rls="$1"  # Debug | Release
+    pushd "$SRC_MOUNT/Launcher/bin/$rls" > /dev/null || return 1
     dotnet QuantConnect.Lean.Launcher.dll < /dev/null  # do not let lean steal our stdin (Press any key...)
     e=$?
     popd > /dev/null
     return $e
+}
+
+
+run() {
+    _run Release
+}
+
+
+run-debug() {
+    _run Debug
 }
 
 brun() {
