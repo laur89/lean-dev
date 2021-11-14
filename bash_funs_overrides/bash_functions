@@ -6,7 +6,7 @@
 # quite working for us, so let's manually source it:
 source /etc/container_environment.sh
 
-unalias deps build b run brun src >/dev/null 2>&1
+unalias deps build build-debug  b bd run run-debug brun bdrun src >/dev/null 2>&1
 
 # TODO: deprecated?
 deps() {
@@ -19,16 +19,27 @@ deps() {
 }
 
 
-build() {
+_build() {
     local e
     src || return 1
-    dotnet build QuantConnect.Lean.sln  # /property:Configuration=Release
+    dotnet build QuantConnect.Lean.sln $1
     e=$?
     popd > /dev/null
     return $e
 }
 
+
+build() {
+    _build '/property:Configuration=Release'
+}
+
+
+build-debug() {
+    _build
+}
+
 alias b='build'
+alias bd='build-debug'
 
 
 _run() {
@@ -54,6 +65,10 @@ run-debug() {
 
 brun() {
     build && run
+}
+
+bdrun() {
+    build-debug && run-debug
 }
 
 src() {
