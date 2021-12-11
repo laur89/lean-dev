@@ -37,5 +37,8 @@ steps:
       - laur89/lean-dev-rider@master
 
 trigger:
-  branch:
-  - master
+  ref:
+  - refs/heads/master
+  - refs/heads/develop
+  - refs/heads/feature/*
+  - refs/tags/*
