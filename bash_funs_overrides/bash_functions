@@ -40,6 +40,8 @@ build-debug() {
 
 alias b='build'
 alias bd='build-debug'
+alias r='run'
+alias rd='run-debug'
 
 
 _run() {

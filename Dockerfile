@@ -29,7 +29,7 @@ ADD entrypoint.sh /etc/my_init.d/entrypoint.sh
 ADD bash_funs_overrides /home/$USERNAME/.bash_funs_overrides
 
 # Install CLI tools & dependecies 
-RUN /bin/sh /dependencies.sh
+RUN /bin/bash /dependencies.sh
 
 # enable ssh: (from https://github.com/phusion/baseimage-docker#enabling_ssh) {{{
 # set up ssh access to phusion (lean's base image):
