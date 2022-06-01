@@ -4,7 +4,7 @@ set -euo pipefail
 
 apt-get update
 apt-get install -y --no-install-recommends \
-        tmux jq tree fd-find neovim
+        tmux jq tree fd-find neovim iputils-ping htop dnsutils
 
 # force-overwrite because of https://askubuntu.com/questions/1290262/unable-to-install-bat-error-trying-to-overwrite-usr-crates2-json-which :
 # (tldr: issue w/ Rust build tools that are already fixed upstream)

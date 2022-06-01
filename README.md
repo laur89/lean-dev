@@ -1,16 +1,17 @@
 # lean-dev
-note [Dockerhub](https://hub.docker.com/repository/docker/layr/lean-dev/builds)
-settings _should_ trigger auto-build on baseimage bump; untested if that works.
+Any commit on this repo causes build to be triggered in my private infra.
 
-Any commit on this repo also causes build to be triggered.
+TODO: start using dependabot to bump CI build/update our baseimage ver whenever
+the LEAN foundation image is updated.
 
 ## Usage
 
 ### use-prebuilt image (recommended)
 
-dockerhub builds an image in its pipeline: [layr/lean-dev](https://hub.docker.com/r/layr/lean-dev/builds);
+~dockerhub builds an image in its pipeline: [layr/lean-dev](https://hub.docker.com/r/layr/lean-dev/builds);
 You may use this image instead of building yourself; note in this case the non-root
-user is `me`.
+user is `me`.~ As Docker stopped offering free build time, I've migrated image
+creation to private stack. Sorry.
 
 Example  `docker-compose` usage:
 
