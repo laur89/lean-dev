@@ -24,7 +24,7 @@ RUN update-locale LANG=C.UTF-8
 ADD dependencies.sh /
 
 # Entrypoint script switches u/g ID's and `chown`s everything:
-ADD entrypoint.sh /etc/my_init.d/entrypoint.sh
+ADD entrypoint.sh ib_setup.sh /etc/my_init.d/
 
 ADD bash_funs_overrides /home/$USERNAME/.bash_funs_overrides
 
@@ -54,6 +54,8 @@ RUN mkdir /home/$USERNAME/.ssh && \
     #chmod 700 -- /home/$USERNAME/.ssh && chmod 600 /home/$USERNAME/.ssh/authorized_keys
 RUN grep -Eq '^UsePAM\s+yes' /etc/ssh/sshd_config || echo 'UsePAM yes' >> /etc/ssh/sshd_config
 # }}}
+
+RUN ulimit -n 30000
 
 # Install some py libraries for better IDE integration:
 RUN pip install --no-cache-dir  quantconnect-stubs

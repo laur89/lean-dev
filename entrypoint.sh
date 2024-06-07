@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 #
 # mostly stolen from https://medium.com/@ls12styler/docker-as-an-integrated-development-environment-95bc9b01d2c1
 ###########################################################

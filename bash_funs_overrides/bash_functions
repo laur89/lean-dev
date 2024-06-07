@@ -6,7 +6,7 @@
 # quite working for us, so let's manually source it:
 source /etc/container_environment.sh
 
-unalias deps build build-debug  b bd run run-debug brun bdrun src >/dev/null 2>&1
+unalias deps build build-debug build-ib b bd r rd run run-debug brun bdrun src ib ibbuild >/dev/null 2>&1
 
 # TODO: deprecated?
 deps() {
@@ -38,10 +38,20 @@ build-debug() {
     _build
 }
 
+build-ib() {
+    local e
+    ib || return 1
+    dotnet build QuantConnect.InteractiveBrokersBrokerage.sln
+    e=$?
+    popd > /dev/null
+    return $e
+}
+
 alias b='build'
 alias bd='build-debug'
 alias r='run'
 alias rd='run-debug'
+alias ibbuild='build-ib'
 
 
 _run() {
@@ -76,3 +86,10 @@ bdrun() {
 src() {
     pushd -- "$SRC_MOUNT" > /dev/null
 }
+
+ib() {
+    pushd -- "$IBKR_MOUNT" > /dev/null
+}
+
+ulimit -n 30000
+

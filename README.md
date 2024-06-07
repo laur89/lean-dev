@@ -24,15 +24,17 @@ Example  `docker-compose` usage:
         environment:
           - HOST_USER_ID=$UID
           - HOST_GROUP_ID=$GID
-          - SRC_MOUNT=$SRC_MOUNT
+          - SRC_MOUNT
+          - IBKR_MOUNT
         ports:
           - "2223:22"
         volumes:
           - ./:${SRC_MOUNT}:cached
+          - ../Lean.Brokerages.InteractiveBrokers:${IBKR_MOUNT}:cached
         tty: true
 
-Note env var `SRC_MOUNT` needs to be provided by `.env` file, or manually defined 
-in docker-compose.
+Note env vars `SRC_MOUNT` & `IBKR_MOUNT` need to be provided by `.env` file,
+or manually defined in docker-compose.
 
 
 ### build yourself
@@ -51,14 +53,16 @@ Use it from your `docker-compose` as follows in order to build the image yoursel
         environment:
           - HOST_USER_ID=$UID
           - HOST_GROUP_ID=$GID
-          - SRC_MOUNT=$SRC_MOUNT
+          - SRC_MOUNT
+          - IBKR_MOUNT
         ports:
           - "2223:22"
         volumes:
           - ./:${SRC_MOUNT}:cached
+          - ../Lean.Brokerages.InteractiveBrokers:${IBKR_MOUNT}:cached
         tty: true
 
-Note the env vars `USERNAME` & `SRC_MOUNT` are to be provided either
+Note the env vars `USERNAME`, `SRC_MOUNT` & `IBKR_MOUNT` are to be provided either
 by `.env` file, or manually define 'em in docker-compose.
 
 
