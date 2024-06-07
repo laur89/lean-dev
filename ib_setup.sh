@@ -12,7 +12,7 @@
 setup_links() {
     local trgt i src
 
-    trgt="$SRC_MOUNT/Launcher/bin/Debug"
+    trgt="$LEAN_MOUNT/Launcher/bin/Debug"
 
     if ! [[ -d "$trgt" ]]; then
         echo "target [$trgt] not a dir, something's hecked!"
@@ -37,13 +37,13 @@ setup_links() {
     done
 }
 
-LAUNCHER_CONF="$SRC_MOUNT/Launcher/config.json"
+LAUNCHER_CONF="$LEAN_MOUNT/Launcher/config.json"
 
 if [[ "$UID" -ne 0 ]]; then
     echo 'need to run as root'
     exit 1
-elif ! [[ -d "$SRC_MOUNT" ]]; then
-    echo "[$SRC_MOUNT] not a dir"
+elif ! [[ -d "$LEAN_MOUNT" ]]; then
+    echo "[$LEAN_MOUNT] not a dir"
     exit 1
 elif ! [[ -s "$LAUNCHER_CONF" ]]; then
     echo "[$LAUNCHER_CONF] not found"

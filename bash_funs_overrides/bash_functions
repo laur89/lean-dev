@@ -81,7 +81,7 @@ _run() {
     local rls e
 
     rls="$1"  # Debug | Release
-    pushd "$SRC_MOUNT/Launcher/bin/$rls" > /dev/null || return 1
+    pushd "$LEAN_MOUNT/Launcher/bin/$rls" > /dev/null || return 1
     dotnet QuantConnect.Lean.Launcher.dll < /dev/null  # do not let lean steal our stdin (Press any key...)
     e=$?
     popd > /dev/null
@@ -107,7 +107,7 @@ bdrun() {
 }
 
 lean() {
-    pushd -- "$SRC_MOUNT" > /dev/null
+    pushd -- "$LEAN_MOUNT" > /dev/null
 }
 
 ib() {

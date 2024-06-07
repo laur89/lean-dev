@@ -12,7 +12,7 @@
 setup_links() {
     local trgt i src
 
-    trgt="$SRC_MOUNT/Launcher/bin/Debug"
+    trgt="$LEAN_MOUNT/Launcher/bin/Debug"
 
     if ! [[ -d "$trgt" ]]; then
         echo "target [$trgt] not a dir, something's hecked!"
@@ -38,8 +38,8 @@ setup_links() {
     done
 }
 
-if ! [[ -d "$SRC_MOUNT" ]]; then
-    echo "[$SRC_MOUNT] not a dir"
+if ! [[ -d "$LEAN_MOUNT" ]]; then
+    echo "[$LEAN_MOUNT] not a dir"
     exit 1
 fi
 
