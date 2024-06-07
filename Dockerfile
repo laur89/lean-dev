@@ -16,6 +16,11 @@ ENV HOME /home/$USERNAME
 # opt-out of .NET telemetry:
 ENV DOTNET_CLI_TELEMETRY_OPTOUT 1
 
+# ant url/versions from https://ant.apache.org/bindownload.cgi
+ENV ANT_VER         1.9.16
+ENV ANT_INSTALL_DIR /opt/ant
+ENV ANT_EXEC        $ANT_INSTALL_DIR/bin/ant
+
 ENV DEBIAN_FRONTEND=noninteractive
 RUN update-locale LANG=C.UTF-8
 
@@ -24,7 +29,7 @@ RUN update-locale LANG=C.UTF-8
 ADD dependencies.sh /
 
 # Entrypoint script switches u/g ID's and `chown`s everything:
-ADD entrypoint.sh ib_setup.sh /etc/my_init.d/
+ADD entrypoint.sh ib_setup.sh iba_setup.sh /etc/my_init.d/
 
 ADD bash_funs_overrides /home/$USERNAME/.bash_funs_overrides
 
@@ -59,6 +64,13 @@ RUN ulimit -n 30000
 
 # Install some py libraries for better IDE integration:
 RUN pip install --no-cache-dir  quantconnect-stubs
+
+# install ant
+# this is needed for building IBAutomater
+RUN mkdir -p \
+        $ANT_INSTALL_DIR && \
+    wget --directory-prefix=/tmp https://dlcdn.apache.org/ant/binaries/apache-ant-${ANT_VER}-bin.tar.bz2 && \
+    tar -xvf /tmp/apache-ant-${ANT_VER}-bin.tar.bz2 -C $ANT_INSTALL_DIR --strip-components=1
 
 # if pythonnet is needed, then     pip install pythonnet==2.4.0  {
 #- note the reason we'd be installing pythonnet v2.4.0 is that newer one requires

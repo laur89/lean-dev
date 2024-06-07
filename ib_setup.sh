@@ -28,6 +28,7 @@ setup_links() {
 
         if ! [[ -e "$src" ]]; then
             echo "source [$src] does not exist, cannot link it!"
+            echo "  !!! if you haven't built IB Brokerage yet, execute  ibbuild"  # alias defined in bash_functions
             continue
         fi
 

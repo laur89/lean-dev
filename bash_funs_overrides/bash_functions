@@ -6,12 +6,12 @@
 # quite working for us, so let's manually source it:
 source /etc/container_environment.sh
 
-unalias deps build build-debug build-ib b bd r rd run run-debug brun bdrun src ib ibbuild >/dev/null 2>&1
+unalias deps build build-debug build-ib b bd r rd run run-debug brun bdrun src ib ibbuild ibabuild >/dev/null 2>&1
 
 # TODO: deprecated?
 deps() {
     local e
-    src || return 1
+    lean || return 1
     nuget restore QuantConnect.Lean.sln
     e=$?
     popd > /dev/null
@@ -21,7 +21,7 @@ deps() {
 
 _build() {
     local e
-    src || return 1
+    lean || return 1
     dotnet build QuantConnect.Lean.sln $1
     e=$?
     popd > /dev/null
@@ -47,11 +47,34 @@ build-ib() {
     return $e
 }
 
+build-iba() {
+    local e
+    iba || return 1
+
+    pushd -- ./java/IBAutomater/ > /dev/null
+    $ANT_EXEC  -quiet  # defined in Dockerfile
+    e=$?
+    if [[ "$e" -ne 0 ]]; then
+        popd > /dev/null
+        echo "ant build failed w/ $e, won't proceed w/ dotnet build"
+        return $e
+    fi
+
+    popd > /dev/null
+
+    dotnet build IBAutomater.sln
+    e=$?
+    popd > /dev/null
+    return $e
+}
+
+alias src='lean'
 alias b='build'
 alias bd='build-debug'
 alias r='run'
 alias rd='run-debug'
 alias ibbuild='build-ib'
+alias ibabuild='build-iba'
 
 
 _run() {
@@ -83,12 +106,16 @@ bdrun() {
     build-debug && run-debug
 }
 
-src() {
+lean() {
     pushd -- "$SRC_MOUNT" > /dev/null
 }
 
 ib() {
     pushd -- "$IBKR_MOUNT" > /dev/null
+}
+
+iba() {
+    pushd -- "$IBKR_AUTO" > /dev/null
 }
 
 ulimit -n 30000
