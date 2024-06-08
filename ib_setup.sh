@@ -79,9 +79,9 @@ if ! [[ -d "$IBG_DIR" ]]; then
     find "$ROOT_IBG_DIR/" -maxdepth 1 -mindepth 1 -exec mv -t "$IBG_DIR" {} +
 
     # perms:
-    chown -R "root:$USERNAME"  /root  # TODO: shouldn't/couldn't this be  /root/Jts/  instead of whole /root?; NOPE - cannot be just /Jts
-    chmod -R g+rw /root/Jts/
+    chown "root:$USERNAME"  /root  # TODO: shouldn't/couldn't this be  /root/Jts/  instead of whole /root?; NOPE - cannot be just /Jts
     chmod g+rwx /root   # looks like this is required so it can write (into) /root/Jts; why Jts is needed with gateway, dunno
+    chmod -R g+rw /root/Jts/
     chown -R "$USERNAME:$USERNAME" "/home/$USERNAME"
 fi
 

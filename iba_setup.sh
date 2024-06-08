@@ -19,11 +19,13 @@ setup_links() {
         return 1
     fi
 
-    # 2024 two versiosn are built, net6.0 & netstandard2.1:
+    # in 2024 two versions are built, net6.0 & netstandard2.1:
     #    /home/me/IBAutomater/QuantConnect.IBAutomater/bin/Debug/net6.0/QuantConnect.IBAutomater.dll
     #    /home/me/IBAutomater/QuantConnect.IBAutomater/bin/Debug/netstandard2.1/QuantConnect.IBAutomater.dll
     for i in \
         QuantConnect.IBAutomater/bin/Debug/net6.0/QuantConnect.IBAutomater.dll \
+        QuantConnect.IBAutomater/bin/Debug/net6.0/IBAutomater.sh \
+        QuantConnect.IBAutomater/bin/Debug/net6.0/IBAutomater.jar \
             ; do
         src="${IBKR_AUTO}/$i"
 
