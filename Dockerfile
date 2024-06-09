@@ -66,11 +66,15 @@ RUN ulimit -n 30000
 RUN pip install --no-cache-dir  quantconnect-stubs
 
 # install ant
-# this is needed for building IBAutomater
+# this is needed for building IBAutomater;
+#
+# chown/chmod /etc/my_init.d/ is it so we can modify the init files later on if need be
 RUN mkdir -p \
         $ANT_INSTALL_DIR && \
     wget --directory-prefix=/tmp https://dlcdn.apache.org/ant/binaries/apache-ant-${ANT_VER}-bin.tar.bz2 && \
-    tar -xvf /tmp/apache-ant-${ANT_VER}-bin.tar.bz2 -C $ANT_INSTALL_DIR --strip-components=1
+    tar -xvf /tmp/apache-ant-${ANT_VER}-bin.tar.bz2 -C $ANT_INSTALL_DIR --strip-components=1 && \
+    chown -R root:$USERNAME  /etc/my_init.d/ && \
+    chmod -R g+rwx  /etc/my_init.d/
 
 # if pythonnet is needed, then     pip install pythonnet==2.4.0  {
 #- note the reason we'd be installing pythonnet v2.4.0 is that newer one requires

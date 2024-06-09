@@ -80,8 +80,12 @@ if ! [[ -d "$IBG_DIR" ]]; then
 
     # perms:
     chown "root:$USERNAME"  /root  # TODO: shouldn't/couldn't this be  /root/Jts/  instead of whole /root?; NOPE - cannot be just /Jts
+    chown -R "root:$USERNAME"  /root/Jts
+    chmod -R g+rw              /root/Jts/
+
+    # note this will disable root ssh login, as /root pers can be max 750; see https://askubuntu.com/a/566418/1002165 :
     chmod g+rwx /root   # looks like this is required so it can write (into) /root/Jts; why Jts is needed with gateway, dunno
-    chmod -R g+rw /root/Jts/
+
     chown -R "$USERNAME:$USERNAME" "/home/$USERNAME"
 fi
 
