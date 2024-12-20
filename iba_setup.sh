@@ -10,22 +10,23 @@
 #
 
 setup_links() {
-    local trgt i src
+    local rls trgt_dir i src trgt
 
-    trgt="$LEAN_MOUNT/Launcher/bin/Debug"
+    rls="$1"   # Debug | Release
+    trgt_dir="$LEAN_MOUNT/Launcher/bin/$rls"
 
-    if ! [[ -d "$trgt" ]]; then
-        echo "target [$trgt] not a dir, something's hecked!"
+    if ! [[ -d "$trgt_dir" ]]; then
+        echo "target [$trgt_dir] not a dir, something's hecked!"
         return 1
     fi
 
-    # in 2024 two versions are built, net6.0 & netstandard2.1:
-    #    /home/me/IBAutomater/QuantConnect.IBAutomater/bin/Debug/net6.0/QuantConnect.IBAutomater.dll
-    #    /home/me/IBAutomater/QuantConnect.IBAutomater/bin/Debug/netstandard2.1/QuantConnect.IBAutomater.dll
+    # in 2024 two versions are built, net9.0 & netstandard2.1:
+    #    /home/me/IBAutomater/QuantConnect.IBAutomater/bin/$rls/net9.0/QuantConnect.IBAutomater.dll
+    #    /home/me/IBAutomater/QuantConnect.IBAutomater/bin/$rls/netstandard2.1/QuantConnect.IBAutomater.dll
     for i in \
-        QuantConnect.IBAutomater/bin/Debug/net6.0/QuantConnect.IBAutomater.dll \
-        QuantConnect.IBAutomater/bin/Debug/net6.0/IBAutomater.sh \
-        QuantConnect.IBAutomater/bin/Debug/net6.0/IBAutomater.jar \
+        QuantConnect.IBAutomater/bin/$rls/net9.0/QuantConnect.IBAutomater.dll \
+        QuantConnect.IBAutomater/bin/$rls/net9.0/IBAutomater.sh \
+        QuantConnect.IBAutomater/bin/$rls/net9.0/IBAutomater.jar \
             ; do
         src="${IBKR_AUTO}/$i"
 
@@ -35,8 +36,12 @@ setup_links() {
             continue
         fi
 
-        [[ -e "$trgt/$(basename -- "$i")" ]] && continue
-        ln -s "$src" "$trgt/"
+        trgt="$trgt_dir/$(basename -- "$i")"
+        if [[ ! -e "$trgt" ]] || [[ -h "$trgt" ]]; then
+            ln -sf -- "$src" "$trgt"
+        else
+            echo "target [$trgt] already exists and is NOT a link"
+        fi
     done
 }
 
@@ -47,7 +52,7 @@ fi
 
 
 if [[ -n "$IBKR_AUTO" ]]; then
-    setup_links
+    setup_links  "${LEAN_TARGET:-Debug}"
 fi
 
 exit 0

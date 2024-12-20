@@ -10,18 +10,20 @@
 #
 
 setup_links() {
-    local trgt i src
+    local rls trgt_dir i src trgt
 
-    trgt="$LEAN_MOUNT/Launcher/bin/Debug"
+    rls="$1"   # Debug | Release
+    trgt_dir="$LEAN_MOUNT/Launcher/bin/$rls"
 
-    if ! [[ -d "$trgt" ]]; then
-        echo "target [$trgt] not a dir, something's hecked!"
+    if ! [[ -d "$trgt_dir" ]]; then
+        echo "target [$trgt_dir] not a dir, something's hecked!"
         return 1
     fi
 
     for i in \
-        QuantConnect.InteractiveBrokersBrokerage/bin/Debug/QuantConnect.Brokerages.InteractiveBrokers.dll \
-        QuantConnect.InteractiveBrokersBrokerage.ToolBox/bin/Debug/QuantConnect.Brokerages.InteractiveBrokers.ToolBox.dll \
+        QuantConnect.InteractiveBrokersBrokerage/bin/$rls/QuantConnect.Brokerages.InteractiveBrokers.dll \
+        QuantConnect.InteractiveBrokersBrokerage/bin/$rls/InteractiveBrokers/ \
+        QuantConnect.InteractiveBrokersBrokerage.ToolBox/bin/$rls/QuantConnect.Brokerages.InteractiveBrokers.ToolBox.dll \
         QuantConnect.InteractiveBrokersBrokerage/CSharpAPI.dll \
             ; do
         src="${IBKR_MOUNT}/$i"
@@ -32,8 +34,12 @@ setup_links() {
             continue
         fi
 
-        [[ -e "$trgt/$(basename -- "$i")" ]] && continue
-        ln -s "$src" "$trgt/"
+        trgt="$trgt_dir/$(basename -- "$i")"
+        if [[ ! -e "$trgt" ]] || [[ -h "$trgt" ]]; then
+            ln -sf -- "$src" "$trgt"
+        else
+            echo "target [$trgt] already exists and is NOT a link"
+        fi
     done
 }
 
@@ -52,7 +58,7 @@ fi
 
 
 if [[ -n "$IBKR_MOUNT" ]]; then
-    setup_links
+    setup_links  "${LEAN_TARGET:-Debug}"
 fi
 
 ROOT_IBG_DIR='/root/ibgateway'
@@ -80,7 +86,7 @@ if ! [[ -d "$IBG_DIR" ]]; then
 
     # perms:
     chown "root:$USERNAME"  /root  # TODO: shouldn't/couldn't this be  /root/Jts/  instead of whole /root?; NOPE - cannot be just /Jts
-    chown -R "root:$USERNAME"  /root/Jts
+    chown -R "root:$USERNAME"  /root/Jts/
     chmod -R g+rw              /root/Jts/
 
     # note this will disable root ssh login, as /root pers can be max 750; see https://askubuntu.com/a/566418/1002165 :

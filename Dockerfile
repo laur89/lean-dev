@@ -9,15 +9,19 @@ ARG USERNAME
 ENV USERNAME=${USERNAME:-me}
 
 RUN useradd -ms /bin/bash ${USERNAME}
-# set group so we can read /etc/container_environment* stuff by phusion:
+# set group so our user can read /etc/container_environment* stuff set up by phusion...:
 RUN usermod -a -G docker_env  $USERNAME
+# ...but we can also just lax the permissions: {  # see https://github.com/phusion/baseimage-docker/?tab=readme-ov-file#security
+RUN chmod 755 /etc/container_environment && \
+    chmod 644 /etc/container_environment.sh /etc/container_environment.json
+# }
 WORKDIR /home/$USERNAME
 ENV HOME /home/$USERNAME
 # opt-out of .NET telemetry:
 ENV DOTNET_CLI_TELEMETRY_OPTOUT 1
 
 # ant url/versions from https://ant.apache.org/bindownload.cgi
-ENV ANT_VER         1.9.16
+ENV ANT_VER         1.10.15
 ENV ANT_INSTALL_DIR /opt/ant
 ENV ANT_EXEC        $ANT_INSTALL_DIR/bin/ant
 
