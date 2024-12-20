@@ -2,47 +2,6 @@
 #
 ###########################################################
 
-# git clone the ibkr stuff
-# add  following to docker-compose.volumes:
-    #       - ../Lean.Brokerages.InteractiveBrokers:${IBKR_MOUNT}:cached
-# add  following to .env:
-# IBKR_MOUNT=/home/me/Lean.Brokerages.InteractiveBrokers
-#
-
-setup_links() {
-    local rls trgt_dir i src trgt
-
-    rls="$1"   # Debug | Release
-    trgt_dir="$LEAN_MOUNT/Launcher/bin/$rls"
-
-    if ! [[ -d "$trgt_dir" ]]; then
-        echo "target [$trgt_dir] not a dir, something's hecked!"
-        return 1
-    fi
-
-    for i in \
-        QuantConnect.InteractiveBrokersBrokerage/bin/$rls/QuantConnect.Brokerages.InteractiveBrokers.dll \
-        QuantConnect.InteractiveBrokersBrokerage/bin/$rls/InteractiveBrokers/ \
-        QuantConnect.InteractiveBrokersBrokerage.ToolBox/bin/$rls/QuantConnect.Brokerages.InteractiveBrokers.ToolBox.dll \
-        QuantConnect.InteractiveBrokersBrokerage/CSharpAPI.dll \
-            ; do
-        src="${IBKR_MOUNT}/$i"
-
-        if ! [[ -e "$src" ]]; then
-            echo "source [$src] does not exist, cannot link it!"
-            echo "  !!! if you haven't built IB Brokerage yet, execute  ibbuild"  # alias defined in bash_functions
-            continue
-        fi
-
-        trgt="$trgt_dir/$(basename -- "$i")"
-        if [[ ! -e "$trgt" ]] || [[ -h "$trgt" ]]; then
-            ln -sf -- "$src" "$trgt"
-        else
-            echo "target [$trgt] already exists and is NOT a link"
-        fi
-    done
-}
-
 LAUNCHER_CONF="$LEAN_MOUNT/Launcher/config.json"
 
 if [[ "$UID" -ne 0 ]]; then
@@ -56,10 +15,7 @@ elif ! [[ -s "$LAUNCHER_CONF" ]]; then
     exit 1
 fi
 
-
-if [[ -n "$IBKR_MOUNT" ]]; then
-    setup_links  "${LEAN_TARGET:-Debug}"
-fi
+update_lean_links.sh  "${LEAN_TARGET:-Debug}"
 
 ROOT_IBG_DIR='/root/ibgateway'
 IB_VER="$(grep -Po '(^.*(?=\s+//)|.*)' "$LAUNCHER_CONF" | grep -Ev '^\s*\/\/' | jq -r '."ib-version"')"  # expected ib-gateway version

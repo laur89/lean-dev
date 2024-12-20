@@ -1,5 +1,5 @@
 FROM  quantconnect/lean:foundation
-MAINTAINER Laur
+MAINTAINER Laurito
 
 
 # make in-container user same as host's (UID & GUID wise):
@@ -33,9 +33,10 @@ RUN update-locale LANG=C.UTF-8
 ADD dependencies.sh /
 
 # Entrypoint script switches u/g ID's and `chown`s everything:
-ADD entrypoint.sh ib_setup.sh iba_setup.sh /etc/my_init.d/
+ADD my_init_scripts/*   /etc/my_init.d/
+ADD scripts/*           /usr/local/bin/
 
-ADD bash_funs_overrides /home/$USERNAME/.bash_funs_overrides
+ADD bash_funs_overrides  /home/$USERNAME/.bash_funs_overrides
 
 # Install CLI tools & dependecies 
 RUN /bin/bash /dependencies.sh
