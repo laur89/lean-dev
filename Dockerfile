@@ -18,7 +18,9 @@ RUN chmod 755 /etc/container_environment && \
 WORKDIR /home/$USERNAME
 ENV HOME /home/$USERNAME
 # opt-out of .NET telemetry:
-ENV DOTNET_CLI_TELEMETRY_OPTOUT 1
+ENV DOTNET_CLI_TELEMETRY_OPTOUT  true
+# opt-out of .NET welcome message:
+ENV DOTNET_NOLOGO                true
 
 # ant url/versions from https://ant.apache.org/bindownload.cgi
 ENV ANT_VER         1.10.15
@@ -30,7 +32,7 @@ RUN update-locale LANG=C.UTF-8
 
 # Copy over bash script used to install CLI tools. Build cache will only be 
 # invalidated if this bash script was changed. 
-ADD dependencies.sh /
+ADD dependencies.sh  /
 
 # Entrypoint script switches u/g ID's and `chown`s everything:
 ADD my_init_scripts/*   /etc/my_init.d/

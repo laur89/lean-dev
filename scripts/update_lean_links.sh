@@ -93,7 +93,7 @@ setup_iba_links() {
 if ! [[ -d "$LEAN_MOUNT" ]]; then
     echo "[$LEAN_MOUNT] not a dir"
     exit 1
-elif [[ $# -ne 1 ]] || [[ ! "$RELEASE" =~ (Debug|Release) ]]; then
+elif [[ $# -ne 1 ]] || [[ ! "$RELEASE" =~ ^(Debug|Release)$ ]]; then
     echo "wanted target release [Debug|Release] need to be provided as 1st arg"
     exit 1
 fi
