@@ -1,5 +1,4 @@
 FROM  quantconnect/lean:foundation
-MAINTAINER Laurito
 
 
 # make in-container user same as host's (UID & GUID wise):
