@@ -8,7 +8,7 @@ ARG USERNAME
 ENV USERNAME=${USERNAME:-me}
 
 RUN useradd -ms /bin/bash ${USERNAME}
-# add to root group to read-write /root:
+# add to root group to read (& write?) /root:
 RUN usermod -a -G root  $USERNAME
 
 # set group so our user can read /etc/container_environment* stuff set up by phusion...:

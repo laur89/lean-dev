@@ -35,14 +35,12 @@ if ! [[ -d "$IBG_DIR" ]]; then
     find "$ROOT_IBG_DIR/" -maxdepth 1 -mindepth 1 -exec mv -t "$IBG_DIR" {} +
 
     # perms:
-    #chown -R "root:$USERNAME"  /root  # TODO: shouldn't/couldn't this be  /root/Jts/  instead of whole /root?; NOPE - cannot be just /Jts
-    #chmod -R g+rw              /root/Jts/
+    #chown "root:$USERNAME"  /root  # TODO: shouldn't/couldn't this be  /root/Jts/  instead of whole /root?; NOPE - cannot be just /Jts; edit: should not be needed if our regular user is in 'root' group
+    chmod -R g+rw              /root/Jts/
 
     ## note this will disable root ssh login, as /root pers can be max 750; see https://askubuntu.com/a/566418/1002165 :
-    #chmod -R g+rwx /root   # looks like this is required so it can write (into) /root/Jts; why Jts is needed with gateway, dunno
-    chmod -R g+rx /root   # this will preserver root ssh capability, but we get no write in /root
-
-    chown -R "$USERNAME:$USERNAME" "/home/$USERNAME"
+    #chmod -R g+rwx /root   # looks like this is required so it can write (into) /root/jts.ini?
+    chmod -R g+rx /root   # this will preserve ssh-as-root capability, but we get no write in /root
 
     # to find hard-coded occurrences or ibgateway path under /root, do $ cd ~/ibgateway && ffstr '/root/ibgateway'
     grep --recursive --files-with-matches /root/ibgateway  "$IBG_DIR" \
